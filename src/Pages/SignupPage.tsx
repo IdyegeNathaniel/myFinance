@@ -10,6 +10,7 @@ const SignupPage = () => {
           <form action="" className="flex flex-col gap-y-2 py-6">
           <h2 className="text-2xl text-center font-bold mb-4">Register</h2>
             <input type="text" name="name" placeholder="Enter Name" className="w-full py-3 px-2 mb-2 outline-none" />
+            <input type="email" name="email" placeholder="Enter Email" className="w-full py-3 px-2 mb-2 outline-none" />
             <input type="password" name="" placeholder="Enter Password" className="w-full py-3 px-2 mb-4 outline-none"/>
             <button type="submit" className="bg-green-500 hover:bg-green-600 py-2 px-4 mb-2 cursor-pointer text-white font-bold">Submit</button>
             <p className="text-center text-xs">Or</p>
