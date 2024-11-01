@@ -13,7 +13,7 @@ import NotFoundPage from "./Pages/NotFoundPage";
 const App = () => {
   const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/sign-in" element={ <MainLayout /> } >
+    <Route path="/" element={ <MainLayout /> } >
       <Route path="/sign-in" element={ <SigninPage /> } />
       <Route path="/sign-up" element={ <SignupPage /> } />
       <Route path="*" element={ <NotFoundPage /> } />
