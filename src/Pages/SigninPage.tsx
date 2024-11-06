@@ -15,20 +15,20 @@ const instance = axios.create({
 });
 
 const SigninPage: React.FC<SigninPageProps> = () => {
-  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string | number>("");
   const [error, setError] = useState<string | null>(null);
 
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!name || !password) {
+    if (!email || !password) {
       setError("Both Fields are required");
       return;
     }
     try {
       const response: AxiosResponse<ApiRespopnse> = await instance.post("/sign-in", {
-        name,
+        email,
         password,
       });
       const token = response.data.token;
@@ -57,13 +57,15 @@ const SigninPage: React.FC<SigninPageProps> = () => {
         <div className={signInContainerClass}>
           <form onSubmit={submitForm} className={formClass}>
             <h2 className="text-2xl text-center font-bold mb-4">Login</h2>
+
+            {error && <p style={{ color: 'red', textAlign: "center" }}>{error}</p>}
             <input
-              type="text"
-              name="name"
-              placeholder="Enter Name"
+              type="email"
+              name="email"
+              placeholder="Enter Email"
               className={signInputClass}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <input
               type="password"
@@ -80,7 +82,6 @@ const SigninPage: React.FC<SigninPageProps> = () => {
             <button type="submit" className={googleButton}>
               Continue With Google
             </button>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
             <p className="text-xs text-center">
               Don't have an account?{" "}
               <Link to={"/sign-up"} className="underline">
