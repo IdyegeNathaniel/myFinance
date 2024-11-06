@@ -11,7 +11,7 @@ interface SigninPageProps {
 }
 
 const instance = axios.create({
-  baseURL: "https://api.cashflow.rehx.name.ng"
+  baseURL: "https://api.cashflow.rehx.name.ng/api/v1/auth/login"
 });
 
 const SigninPage: React.FC<SigninPageProps> = () => {
