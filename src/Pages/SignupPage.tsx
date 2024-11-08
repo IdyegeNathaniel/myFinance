@@ -1,52 +1,47 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 
-interface ApiRespopnse {
-  token: string
-}
 interface SignupPageProps {
+  fullName: string;
   email: string;
   password: string | number
-  fullName: string;
 }
 
-const instance = axios.create({
-  baseURL: "https://api.cashflow.rehx.name.ng/api/v1/auth/register"
-});
-
 const SignupPage: React.FC = () => {
-  const [signupData, setSignupData] = useState<SignupPageProps>({
+  const [formData, setFormData] = useState<SignupPageProps>({
+    fullName: "",
     email: "",
     password: "",
-    fullName: "",
   });
   const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!mail || !password || !fullName) {
-      throw new Error("Both fields are required")
-    }
+    setIsSubmitting(true);
+    setError(null);
+
     try {
-      const response: AxiosResponse<ApiRespopnse> = await instance.post("/", {
-        mail,
-        password,
-        fullName
-      });
-      const token = response.token.data
-      if (token) {
-        localStorage.setItem("token", token);
-      } else {
-
-      }
-    } catch (error) {
-
+      const response = await axios.post("https://api.cashflow.rehx.name.ng/api/v1/auth/signup", formData);
+      console.log("Signup successful:", response.data);
+      // You can redirect the user, show a success message, etc.
+    } catch (err) {
+      setError("Failed to sign up. Please try again.");
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
     }
-
   };
 
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData, [e.target.name]: e.target.value
+    });
+  };
 
   //STYLING
   const signUpClass = "w-full py-20 flex items-center justify-center";
@@ -63,35 +58,39 @@ const SignupPage: React.FC = () => {
         <div className={containerClass}>
           <form onSubmit={submitForm} className={formClass}>
             <h2 className="text-2xl text-center font-bold mb-4">Register</h2>
+            {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
             <input
               type="text"
               name="fullname"
-              placeholder="Enter Fullname"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
+              placeholder="Enter Full Name"
+              value={formData.fullName}
+              onChange={handleChange}
               className={inputClass}
+              required
             />
             <input
               type="email"
               name="email"
               placeholder="Enter Email"
-              value={signupData.email}
-              onChange={(e) => signupData.setEmail(e.target.value)}
+              value={formData.email}
+              onChange={handleChange}
               className={inputClass}
+              required
             />
             <input
               type="password"
               name=""
               placeholder="Enter Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formData.password}
+              onChange={handleChange}
               className={inputClass}
             />
             <button
               type="submit"
               className={regButClass}
+              disabled={isSubmitting}
             >
-              Submit
+              {isSubmitting ? "Submitting...." : "Submuit"}
             </button>
             <p className="text-center text-xs">Or</p>
             <button
