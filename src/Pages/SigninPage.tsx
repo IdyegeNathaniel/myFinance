@@ -6,7 +6,7 @@ interface ApiRespopnse {
   token: string;
 }
 interface SigninPageProps {
-  name: string;
+  email: string;
   password: string;
 }
 
@@ -27,7 +27,7 @@ const SigninPage: React.FC<SigninPageProps> = () => {
       return;
     }
     try {
-      const response: AxiosResponse<ApiRespopnse> = await instance.post("/sign-in", {
+      const response: AxiosResponse<ApiRespopnse> = await instance.post("/", {
         email,
         password,
       });

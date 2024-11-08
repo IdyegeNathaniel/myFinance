@@ -1,13 +1,50 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import axios, { AxiosResponse } from "axios";
 
-const SignupPage = () => {
-  const [fullName, setFullName] = useState<string>("");
-  const [mail, setMail] = useState<string | number>("");
-  const [password, setPassword] = useState<string | number>("");
+interface ApiRespopnse {
+  token: string
+}
+interface SignupPageProps {
+  email: string;
+  password: string | number
+  fullName: string;
+}
+
+const instance = axios.create({
+  baseURL: "https://api.cashflow.rehx.name.ng/api/v1/auth/register"
+});
+
+const SignupPage: React.FC = () => {
+  const [signupData, setSignupData] = useState<SignupPageProps>({
+    email: "",
+    password: "",
+    fullName: "",
+  });
+  const [error, setError] = useState<string | null>(null);
 
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!mail || !password || !fullName) {
+      throw new Error("Both fields are required")
+    }
+    try {
+      const response: AxiosResponse<ApiRespopnse> = await instance.post("/", {
+        mail,
+        password,
+        fullName
+      });
+      const token = response.token.data
+      if (token) {
+        localStorage.setItem("token", token);
+      } else {
+
+      }
+    } catch (error) {
+
+    }
+
   };
 
 
@@ -38,8 +75,8 @@ const SignupPage = () => {
               type="email"
               name="email"
               placeholder="Enter Email"
-              value={mail}
-              onChange={(e) => setMail(e.target.value)}
+              value={signupData.email}
+              onChange={(e) => signupData.setEmail(e.target.value)}
               className={inputClass}
             />
             <input
