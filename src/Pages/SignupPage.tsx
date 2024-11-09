@@ -2,11 +2,17 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
+interface SignUpResponse {
+  message: string;
+}
+
 interface SignupPageProps {
   fullName: string;
   email: string;
   password: string | number
 }
+
+const signUpEndPoint = import.meta.env.VITE_SIGNUP_ENDPOINT;
 
 const SignupPage: React.FC = () => {
   const [formData, setFormData] = useState<SignupPageProps>({
@@ -25,12 +31,14 @@ const SignupPage: React.FC = () => {
     setError(null);
 
     try {
-      const response = await axios.post("https://api.cashflow.rehx.name.ng/api/v1/auth/signup", formData);
-      console.log("Signup successful:", response.data);
-      // You can redirect the user, show a success message, etc.
-    } catch (err) {
-      setError("Failed to sign up. Please try again.");
-      console.error(err);
+      const response = await axios.post<SignUpResponse>(signUpEndPoint, {
+        fullName: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+      });
+      console.log('Sign-up successful:', response.data);
+    } catch (error) {
+      console.error('Error signing up:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -38,10 +46,13 @@ const SignupPage: React.FC = () => {
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData, [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }));
   };
+
 
   //STYLING
   const signUpClass = "w-full py-20 flex items-center justify-center";

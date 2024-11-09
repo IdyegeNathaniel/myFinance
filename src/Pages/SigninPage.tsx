@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -10,38 +10,32 @@ interface SigninPageProps {
   password: string;
 }
 
-const instance = axios.create({
-  baseURL: "https://api.cashflow.rehx.name.ng/api/v1/auth/login"
-});
+const loginEndpoint = import.meta.env.VITE_LOGIN_ENDPOINT;
 
-const SigninPage: React.FC<SigninPageProps> = () => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string | number>("");
-  const [error, setError] = useState<string | null>(null);
+const SigninPage: React.FC = () => {
+  const [formData, setFormData] = useState<SigninPageProps>({
+    email: "",
+    password: "",
+  });
+
+  // const [error, setError] = useState<string | null>(null);
 
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!email || !password) {
-      setError("Both Fields are required");
-      return;
-    }
     try {
-      const response: AxiosResponse<ApiRespopnse> = await instance.post("/", {
-        email,
-        password,
-      });
-      const token = response.data.token;
-
-      if (token) {
-        localStorage.setItem('token', token);
-      } else {
-        setError("Invalid Log in response from server")
-      }
+      const response = await axios.post<ApiRespopnse>(loginEndpoint, formData);
+      console.log('Login successful:', response.data);
+      sessionStorage.setItem('token', response.data.token);
     } catch (error) {
-      setError("Login failed, try again");
+      console.log('Error logging in:', error);
     }
   };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
 
   //STYLING
   const signInClass = "w-full flex items-center justify-center py-20";
@@ -58,22 +52,24 @@ const SigninPage: React.FC<SigninPageProps> = () => {
           <form onSubmit={submitForm} className={formClass}>
             <h2 className="text-2xl text-center font-bold mb-4">Login</h2>
 
-            {error && <p style={{ color: 'red', textAlign: "center" }}>{error}</p>}
+            {/* {error && <p style={{ color: 'red', textAlign: "center" }}>{error}</p>} */}
             <input
               type="email"
               name="email"
               placeholder="Enter Email"
               className={signInputClass}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={formData.email}
+              onChange={handleChange}
+              required
             />
             <input
               type="password"
               name="password"
               placeholder="Enter Password"
               className={signInputClass}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formData.password}
+              onChange={handleChange}
+              required
             />
             <button type="submit" className={signButton}>
               Sign In
