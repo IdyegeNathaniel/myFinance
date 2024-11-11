@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 interface ApiRespopnse {
   token: string;
@@ -24,7 +25,6 @@ const SigninPage: React.FC = () => {
     e.preventDefault();
     try {
       const response = await axios.post<ApiRespopnse>(loginEndpoint, formData);
-      console.log('Login successful:', response.data);
       sessionStorage.setItem('token', response.data.token);
     } catch (error) {
       console.log('Error logging in:', error);
@@ -35,6 +35,8 @@ const SigninPage: React.FC = () => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
+
+  toast.success("Successful");
 
 
   //STYLING

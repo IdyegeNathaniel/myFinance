@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 interface SignUpResponse {
   message: string;
@@ -21,7 +22,9 @@ const SignupPage: React.FC = () => {
     password: "",
   });
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
 
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -29,6 +32,7 @@ const SignupPage: React.FC = () => {
 
     setIsSubmitting(true);
     setError(null);
+    setSuccess(null);
 
     try {
       const response = await axios.post<SignUpResponse>(signUpEndPoint, {
@@ -36,9 +40,9 @@ const SignupPage: React.FC = () => {
         email: formData.email,
         password: formData.password,
       });
-      console.log('Sign-up successful:', response.data);
+      setSuccess('Sign-up successful:', response.data);
     } catch (error) {
-      console.error('Error signing up:', error);
+      setError(response.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -52,6 +56,9 @@ const SignupPage: React.FC = () => {
       [name]: value
     }));
   };
+
+  toast.success("Registration successful");
+
 
 
   //STYLING
@@ -70,9 +77,10 @@ const SignupPage: React.FC = () => {
           <form onSubmit={submitForm} className={formClass}>
             <h2 className="text-2xl text-center font-bold mb-4">Register</h2>
             {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
+            {success && <p style={{ color: "green", textAlign: "center" }}>{success}</p>}
             <input
               type="text"
-              name="fullname"
+              name="fullName"
               placeholder="Enter Full Name"
               value={formData.fullName}
               onChange={handleChange}
@@ -90,7 +98,7 @@ const SignupPage: React.FC = () => {
             />
             <input
               type="password"
-              name=""
+              name="password"
               placeholder="Enter Password"
               value={formData.password}
               onChange={handleChange}
@@ -101,7 +109,7 @@ const SignupPage: React.FC = () => {
               className={regButClass}
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Submitting...." : "Submuit"}
+              {isSubmitting ? "Submitting...." : "Submit"}
             </button>
             <p className="text-center text-xs">Or</p>
             <button
