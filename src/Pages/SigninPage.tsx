@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-interface ApiRespopnse {
+interface ApiResponse {
   token: string;
 }
 interface SigninPageProps {
@@ -19,15 +19,16 @@ const SigninPage: React.FC = () => {
     password: "",
   });
 
-  // const [error, setError] = useState<string | null>(null);
 
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post<ApiRespopnse>(loginEndpoint, formData);
+      const response = await axios.post<ApiResponse>(loginEndpoint, formData);
       sessionStorage.setItem('token', response.data.token);
+      sessionStorage.clear();
+      toast.success(response.message)
     } catch (error) {
-      console.log('Error logging in:', error);
+      toast.error(response.message);
     }
   };
 
@@ -36,7 +37,7 @@ const SigninPage: React.FC = () => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  toast.success("Successful");
+
 
 
   //STYLING
@@ -53,8 +54,6 @@ const SigninPage: React.FC = () => {
         <div className={signInContainerClass}>
           <form onSubmit={submitForm} className={formClass}>
             <h2 className="text-2xl text-center font-bold mb-4">Login</h2>
-
-            {/* {error && <p style={{ color: 'red', textAlign: "center" }}>{error}</p>} */}
             <input
               type="email"
               name="email"

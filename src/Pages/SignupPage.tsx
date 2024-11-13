@@ -40,14 +40,13 @@ const SignupPage: React.FC = () => {
         email: formData.email,
         password: formData.password,
       });
-      setSuccess('Sign-up successful:', response.data);
+      toast.success(response.message);
     } catch (error) {
-      setError(response.message);
+      toast.error(response.message);
     } finally {
       setIsSubmitting(false);
     }
   };
-
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -56,8 +55,6 @@ const SignupPage: React.FC = () => {
       [name]: value
     }));
   };
-
-  toast.success("Registration successful");
 
 
 
