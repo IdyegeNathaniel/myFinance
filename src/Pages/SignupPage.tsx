@@ -1,56 +1,38 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useSignup } from "../hooks/useauth";
+import { SignupData } from "../services/authservice"
 import { toast } from "react-toastify";
 
-interface SignUpResponse {
-  message: string;
-}
 
-interface SignupPageProps {
-  fullName: string;
-  email: string;
-  password: string | number
-}
-
-const signUpEndPoint = import.meta.env.VITE_SIGNUP_ENDPOINT;
 
 const SignupPage: React.FC = () => {
-  const [formData, setFormData] = useState<SignupPageProps>({
+  const [userData, setUserData] = useState<SignupData>({
     fullName: "",
     email: "",
     password: "",
   });
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [error, setError] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const signupMutation = useSignup();
   const navigate = useNavigate();
 
 
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setIsSubmitting(true);
-    setError(null);
-    setSuccess(null);
+    signupMutation.mutate(userData);
 
-    try {
-      const response = await axios.post<SignUpResponse>(signUpEndPoint, {
-        fullName: formData.fullName,
-        email: formData.email,
-        password: formData.password,
-      });
-      toast.success(response.message);
-    } catch (error) {
-      toast.error(response.message);
-    } finally {
-      setIsSubmitting(false);
-    }
+    navigate("/sign-in")
   };
+
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
+    setUserData((prevData) => ({
       ...prevData,
       [name]: value
     }));
@@ -79,7 +61,7 @@ const SignupPage: React.FC = () => {
               type="text"
               name="fullName"
               placeholder="Enter Full Name"
-              value={formData.fullName}
+              value={userData.fullName}
               onChange={handleChange}
               className={inputClass}
               required
@@ -88,7 +70,7 @@ const SignupPage: React.FC = () => {
               type="email"
               name="email"
               placeholder="Enter Email"
-              value={formData.email}
+              value={userData.email}
               onChange={handleChange}
               className={inputClass}
               required
@@ -97,16 +79,15 @@ const SignupPage: React.FC = () => {
               type="password"
               name="password"
               placeholder="Enter Password"
-              value={formData.password}
+              value={userData.password}
               onChange={handleChange}
               className={inputClass}
             />
             <button
               type="submit"
               className={regButClass}
-              disabled={isSubmitting}
             >
-              {isSubmitting ? "Submitting...." : "Submit"}
+              Submit
             </button>
             <p className="text-center text-xs">Or</p>
             <button

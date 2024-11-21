@@ -20,7 +20,7 @@ const VerificationPage: React.FC = () => {
         const verifyToken = async () => {
             try {
                 const response = await axios.post<ApiResponse>(verifyEndPoint, { token });
-                if (response.data.success) {
+                if (response.data && response.success) {
                     toast.success('Email successfully verified!');
                 } else {
                     toast.error('Invalid or expired token.');

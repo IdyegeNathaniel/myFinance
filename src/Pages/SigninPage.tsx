@@ -1,44 +1,27 @@
-import axios from "axios";
+import { useLogin } from "../hooks/useauth";
+import { LoginCredentials } from "../services/authservice"
 import { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
-interface ApiResponse {
-  token: string;
-}
-interface SigninPageProps {
-  email: string;
-  password: string;
-}
-
-const loginEndpoint = import.meta.env.VITE_LOGIN_ENDPOINT;
 
 const SigninPage: React.FC = () => {
-  const [formData, setFormData] = useState<SigninPageProps>({
+  const [credentials, setCredentials] = useState<LoginCredentials>({
     email: "",
     password: "",
   });
 
+  const loginMutation = useLogin();
 
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const response = await axios.post<ApiResponse>(loginEndpoint, formData);
-      sessionStorage.setItem('token', response.data.token);
-      sessionStorage.clear();
-      toast.success(response.message)
-    } catch (error) {
-      toast.error(response.message);
-    }
+
+    loginMutation.mutate(credentials);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setCredentials((prevData) => ({ ...prevData, [name]: value }));
   };
-
-
-
 
   //STYLING
   const signInClass = "w-full flex items-center justify-center py-20";
@@ -59,7 +42,7 @@ const SigninPage: React.FC = () => {
               name="email"
               placeholder="Enter Email"
               className={signInputClass}
-              value={formData.email}
+              value={credentials.email}
               onChange={handleChange}
               required
             />
@@ -68,7 +51,7 @@ const SigninPage: React.FC = () => {
               name="password"
               placeholder="Enter Password"
               className={signInputClass}
-              value={formData.password}
+              value={credentials.password}
               onChange={handleChange}
               required
             />
