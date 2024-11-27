@@ -4,35 +4,11 @@ import { Link, useLocation } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 
-interface ApiResponse {
-    token: string;
-}
-
-const verifyEndPoint = import.meta.env.VITE_VERIFY_ENDPOINT
 
 
 const VerificationPage: React.FC = () => {
-    const query = new URLSearchParams(useLocation().search);
-    const token = query.get('token');
-
-
-    useEffect(() => {
-        const verifyToken = async () => {
-            try {
-                const response = await axios.post<ApiResponse>(verifyEndPoint, { token });
-                if (response.data && response.success) {
-                    toast.success('Email successfully verified!');
-                } else {
-                    toast.error('Invalid or expired token.');
-                }
-            } catch (error) {
-                toast.error('An error occurred. Please try again.');
-                console.error(error);
-            }
-        };
-        if (token) verifyToken();
-    }, [token]);
-
+    const [] = useState<VerificationToen
+    >();
 
     return (
         <section className='w-full flex justify-center items-center py-20'>

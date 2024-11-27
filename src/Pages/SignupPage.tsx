@@ -2,8 +2,6 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSignup } from "../hooks/useauth";
 import { SignupData } from "../services/authservice"
-import { toast } from "react-toastify";
-
 
 
 const SignupPage: React.FC = () => {
