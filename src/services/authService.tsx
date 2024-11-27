@@ -1,19 +1,21 @@
 import axios, { AxiosResponse } from "axios";
 
+const loginEndpoint = import.meta.env.VITE_LOGIN_ENDPOINT;
+
+const signUpEndPoint = import.meta.env.VITE_SIGNUP_ENDPOINT;
+
+const verificationEndPoint = import.meta.env.VITE_VERIFY_ENDPOINT
+
 export interface LoginCredentials {
     email: string;
     password: string;
 }
-
-const loginEndpoint = import.meta.env.VITE_LOGIN_ENDPOINT;
 
 export interface SignupData {
     fullName: string;
     email: string;
     password: string;
 }
-
-const signUpEndPoint = import.meta.env.VITE_SIGNUP_ENDPOINT;
 
 interface AuthResponse {
     token: string;
@@ -34,6 +36,7 @@ export const authService = {
         return res.data;
     },
     verification: async (verifyToken: VerificationToken): Promise<AuthResponse> => {
-        const res: AxiosResponse<AuthResponse> = await axios.post()
+        const res: AxiosResponse<AuthResponse> = await axios.post(verificationEndPoint, verifyToken);
+        return res.data;
     }
 }
