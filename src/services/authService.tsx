@@ -17,6 +17,10 @@ export interface SignupData {
     password: string;
 }
 
+export interface VerificationData {
+    message: string;
+}
+
 interface AuthResponse {
     token: string;
     user: {
@@ -35,8 +39,20 @@ export const authService = {
         const res: AxiosResponse<AuthResponse> = await axios.post(signUpEndPoint, userData);
         return res.data;
     },
-    verification: async (verifyToken: VerificationToken): Promise<AuthResponse> => {
-        const res: AxiosResponse<AuthResponse> = await axios.post(verificationEndPoint, verifyToken);
-        return res.data;
+    verification: async (verifyToken: VerificationData): Promise<AuthResponse> => {
+
+        try {
+            const res: AxiosResponse<AuthResponse> = await axios.post<AuthResponse>(
+                verificationEndPoint, verifyToken);
+            return res.data;
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                throw new Error(
+                    error.response?.data?.message ||
+                    'Email verification failed'
+                );
+            }
+            throw error;
+        }
     }
 }

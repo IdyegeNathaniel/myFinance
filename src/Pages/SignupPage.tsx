@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSignup } from "../hooks/useauth";
-import { SignupData } from "../services/authservice"
+import { SignupData } from "../services/authService"
 
 
 const SignupPage: React.FC = () => {

@@ -1,5 +1,5 @@
 import { useLogin } from "../hooks/useauth";
-import { LoginCredentials } from "../services/authservice"
+import { LoginCredentials } from "../services/authService"
 import { useState } from "react";
 import { Link } from "react-router-dom";
 

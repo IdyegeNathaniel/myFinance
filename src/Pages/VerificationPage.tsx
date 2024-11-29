@@ -1,14 +1,25 @@
 import { HiKey } from "react-icons/hi2"
-import axios from "axios"
-import { Link, useLocation } from "react-router-dom"
+import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { useEffect, useState } from "react"
-import { toast } from "react-toastify"
+import { useVerification } from "../hooks/useauth"
 
 
 
 const VerificationPage: React.FC = () => {
-    const [] = useState<VerificationToen
-    >();
+    const [error, setError] = useState();
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = searchParams.get('token');
+
+        if (!token) {
+            useVerification.setError(new Error('Verification token is missing'));
+            return;
+        }
+
+        useVerification.mutate(token);
+    }, [searchParams]);
 
     return (
         <section className='w-full flex justify-center items-center py-20'>

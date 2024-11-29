@@ -88,32 +88,17 @@ const DashBoard: React.FC = () => {
             <tbody>
 
               <tr className="text-center px-2">
-                <td>
-                  {newExpense.id}
-                </td>
-                <td>
-                  {newExpense.description}
-                </td>
-                <td>
-                  {newExpense.amount}
-                </td>
-                <td>
-                  {newExpense.category}
-                </td>
-                <td>
-                  <button
-
-                    className="bg-red-700 hover:bg-red-600 px-4 py-2 text-white w-full my-3"
-                  >
-                    Delete
-                  </button>
-                </td>
+                {["{newExpense.id}", "{newExpense.description}", "{newExpense.amount}", "{newExpense.category}", <button className="bg-red-700 hover:bg-red-600 px-4 py-2 text-white w-full my-3">
+                  Delete
+                </button>].map((item, index) => (
+                  <td key={index}>{item}</td>
+                ))}
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-    </section>
+    </section >
   );
 };
 

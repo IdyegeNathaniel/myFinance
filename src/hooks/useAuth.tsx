@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { authService, LoginCredentials, SignupData } from '../services/authservice';
 import { toast } from 'react-toastify';
+import { authService } from '../services/authService';
 
 export const useLogin = () => {
     const navigate = useNavigate();
@@ -10,8 +10,7 @@ export const useLogin = () => {
         mutationFn: authService.login,
         onSuccess: (data) => {
             localStorage.setItem('token', data.token);
-            toast(!responsemessage);
-            navigate('/dashboard');
+            navigate('/VerificationPage');
         },
         onError: (error) => {
             console.error('Login error:', error);
@@ -34,3 +33,16 @@ export const useSignup = () => {
         },
     });
 };
+
+export const useVerification = () => {
+    const navigate = useNavigate();
+
+    return useMutation({
+        mutationFn: authService.verification,
+        onSuccess: (data) => {
+            localStorage.setItem('token', data.token);
+            setTimeout(() => navigate("/dashboard"), 3000);
+        },
+
+    });
+}
