@@ -13,7 +13,7 @@ const User_name = "Doe"
 
 const DashBoard: React.FC = () => {
 
-  const [expense, setExpense] = useState<Expense[]>([]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
   const [newExpense, setNewExpense] = useState<Expense>({
     id: 0,
     description: "",
@@ -86,14 +86,15 @@ const DashBoard: React.FC = () => {
               </tr>
             </thead>
             <tbody>
+              {expenses.map((expense) => (
+                <tr key={expense.id} className="text-center px-2">
+                  {/* <td>{expense.date}</td> */}
+                  <td>{expense.description}</td>
+                  <td>{expense.category}</td>
+                  <td>${expense.amount.toFixed(2)}</td>
+                </tr>
+              ))}
 
-              <tr className="text-center px-2">
-                {["{newExpense.id}", "{newExpense.description}", "{newExpense.amount}", "{newExpense.category}", <button className="bg-red-700 hover:bg-red-600 px-4 py-2 text-white w-full my-3">
-                  Delete
-                </button>].map((item, index) => (
-                  <td key={index}>{item}</td>
-                ))}
-              </tr>
             </tbody>
           </table>
         </div>

@@ -11,9 +11,6 @@ const SignupPage: React.FC = () => {
     password: "",
   });
 
-  const [error, setError] = useState(false);
-  const [success, setSuccess] = useState(false);
-
   const signupMutation = useSignup();
   const navigate = useNavigate();
 
@@ -53,8 +50,6 @@ const SignupPage: React.FC = () => {
         <div className={containerClass}>
           <form onSubmit={submitForm} className={formClass}>
             <h2 className="text-2xl text-center font-bold mb-4">Register</h2>
-            {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
-            {success && <p style={{ color: "green", textAlign: "center" }}>{success}</p>}
             <input
               type="text"
               name="fullName"
