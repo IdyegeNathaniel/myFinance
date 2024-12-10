@@ -4,6 +4,9 @@ import { useSignup } from "../hooks/useauth";
 import { SignupData } from "../services/authService"
 
 
+const GoogleAuthenticate = import.meta.env.VITE_GOOGLE_ENDPOINT;
+
+
 const SignupPage: React.FC = () => {
   const [userData, setUserData] = useState<SignupData>({
     fullName: "",
@@ -21,6 +24,7 @@ const SignupPage: React.FC = () => {
     signupMutation.mutate(userData);
 
     navigate("/sign-in")
+
   };
 
 
@@ -33,6 +37,10 @@ const SignupPage: React.FC = () => {
     }));
   };
 
+
+  const googleAuth = () => {
+    window.open(GoogleAuthenticate, "_self")
+  };
 
 
   //STYLING
@@ -86,6 +94,7 @@ const SignupPage: React.FC = () => {
             <button
               type="submit"
               className={regGoogleClass}
+              onClick={googleAuth}
             >
               Continue With Google
             </button>

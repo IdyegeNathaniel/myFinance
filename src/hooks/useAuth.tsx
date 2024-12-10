@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { authService } from '../services/authService';8
+import { authService } from '../services/authService'; 8
 
 export const useLogin = () => {
     const navigate = useNavigate();
@@ -9,12 +9,16 @@ export const useLogin = () => {
     return useMutation({
         mutationFn: authService.login,
         onSuccess: (data) => {
+            // toast.success(data)
             localStorage.setItem('token', data.token);
             navigate('/VerificationPage');
         },
-        onError: (error) => {
-            console.error('Login error:', error);
-            toast(error.message);
+        onError: (error: any) => {
+            if (error.status === 401) {
+                toast.error(error.message);
+            } else {
+                toast.error(error?.message || "An error occurred try again");
+            }
         },
     });
 };
@@ -27,8 +31,8 @@ export const useSignup = () => {
         onSuccess: () => {
             navigate('/sign-in');
         },
-        onError: (error) => {
-            toast.error(error.message);
+        onError: (error: any) => {
+            toast.error(error?.respose?.message);
             console.error('Signup error:', error);
         },
     });

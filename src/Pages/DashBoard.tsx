@@ -2,30 +2,39 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 
-interface Expense {
-  id: number;
-  description: string,
-  category: string;
-  amount: number
-}``
-
 const User_name = "Doe"
 
 const DashBoard: React.FC = () => {
+  const [description, setDescription] = useState<string>();
+  const [amount, setAmount] = useState<string>();
+  const [category, setCategory] = useState<string>();
 
-  const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [newExpense, setNewExpense] = useState<Expense>({
-    id: 0,
-    description: "",
-    category: "",
-    amount: 0,
-  });
+  // const [expenses, setExpenses] = useState<Expense[]>([]);
+  // const [newExpense,  ] = useState<Expense>({
+  //   id: 0,
+  //   date: "",
+  //   description: "",
+  //   category: "",
+  //   amount: 0,
+  // });
 
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const newRecord = {
+      userId: user?.id,
+      date: new Date(),
+      description: description,
+      amount: parseFloat(amount),
+      category: category,
+    }
+
     toast.success("Expense Added");
+
+    setDescription: ("");
+    setAmount: ("");
+    setCategory: ("");
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => { };
@@ -35,14 +44,14 @@ const DashBoard: React.FC = () => {
       <div className="container m-auto max-w-2xl">
         <div className="bg-stone-50 shadow-md py-4 px-2">
           <form onScroll={handleSubmit}>
-            <h2 className="text-2xl text-center font-semibold my-5">Budgets</h2>
+            <h2 className="text-2xl text-center font-semibold my-5">Finance</h2>
             <div className="mb-2">
               <label htmlFor="description">Description:</label>
               <input
                 type="text"
                 id="description"
                 name="description"
-                value={newExpense.description}
+                value={description}
                 onChange={handleChange}
                 className="block w-full outline-none border-2 border-gray-400 p-2"
               />
@@ -50,18 +59,22 @@ const DashBoard: React.FC = () => {
 
             <div className="mb-2">
               <label htmlFor="amount">Amount:</label>
-              <input
-                type="number"
-                name="number"
-                value={newExpense.amount}
-                onChange={handleChange}
-                className="block w-full outline-none border-2 border-gray-400 p-2"
-              />
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  name="number"
+                  value={amount}
+                  onChange={handleChange}
+                  className="block w-full outline-none border-2 border-gray-400 p-2"
+                />
+
+                <input type="date" name="date" id="date" className="cursor-pointer outline-none border-2 border-gray-400 p-2" required />
+              </div>
             </div>
 
             <div className="mb-2">
               <label htmlFor="category">Category:</label>
-              <select name="catgory" id="catgory" className="block w-full outline-none cursor-pointer border-2 border-gray-400 p-2">
+              <select name="catgory" id="catgory" className="block w-full outline-none cursor-pointer border-2 border-gray-400 p-2" value={category}>
                 <option value="default" className="">Select Category</option>
                 <option value="bills">Biils</option>
                 <option value="grocery">Grocery shopping</option>
@@ -78,28 +91,20 @@ const DashBoard: React.FC = () => {
           </form>
 
           <table className="w-full my-4">
-            <thead className=" bg-gray-300 border-b border-white px-4 py-2">
+            <thead className="w-full bg-gray-300 border-b border-white px-4 py-2 ">
               <tr>
-                {["#", "Description", "Amount", "Category", "Action"].map((item, index) => (
-                  <th key={index} className="md:text-[8px]">{item}</th>
+                {["Date", "Description", "Amount", "Category", "Action"].map((item, index) => (
+                  <th key={index} className="md:text-lg">{item}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {expenses.map((expense) => (
-                <tr key={expense.id} className="text-center px-2">
-                  {/* <td>{expense.date}</td> */}
-                  <td>{expense.description}</td>
-                  <td>{expense.category}</td>
-                  <td>${expense.amount.toFixed(2)}</td>
-                </tr>
-              ))}
 
             </tbody>
           </table>
         </div>
       </div>
-    </section >
+    </section>
   );
 };
 

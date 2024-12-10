@@ -1,9 +1,51 @@
+import { useQuery } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
+import { useEffect } from "react";
 import { HiKey } from "react-icons/hi2"
-import { Link } from "react-router-dom"
+import { Link, useSearchParams } from "react-router-dom"
+import { toast } from "react-toastify";
 
+interface VerifyResponse {
+    message: string;
+    verified?: boolean;
+}
+interface ApiError {
+    message: string;
+    code?: string;
+}
+
+const verificationEndPoint = import.meta.env.VITE_VERIFY_ENDPOINT
+
+const verifyEmail = async (token: string): Promise<VerifyResponse> => {
+    if (!token) throw new Error('Verification token is required');
+    const { data } = await axios.post<VerifyResponse>(verificationEndPoint, { token });
+    return data;
+};
 
 const VerificationPage: React.FC = () => {
+    const [searchParams] = useSearchParams();
+    const token = searchParams.get('token');
 
+
+    const { data, isError, error } = useQuery({
+        queryKey: ["emailVerification", token],
+        queryFn: () => verifyEmail(token as string),
+        enabled: !!token,
+        retry: false,
+        staleTime: Infinity,
+    });
+
+    useEffect(() => {
+        if (isError) {
+            const errorMessage = (error as AxiosError<ApiError>).response?.data?.message
+                || 'Verification failed. Please try again.';
+            toast.error(errorMessage)
+        }
+
+        if (data?.verified) {
+            toast.success('Email verified successfully. You can now close this page.')
+        }
+    }, [isError, data?.verified, error]);
 
     return (
         <section className='w-full flex justify-center items-center py-20'>

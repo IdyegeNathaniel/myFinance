@@ -22,12 +22,19 @@ export interface VerificationData {
 }
 
 interface AuthResponse {
-    token: string;
-    user: {
-        id: string;
-        name: string;
-        email: string;
+    success: boolean;
+    data: null | {
+        token?: string;
+        user?: any;
     };
+    message: string;
+
+    // token: string;
+    // user: {
+    //     id: string;
+    //     name: string;
+    //     email: string;
+    // };
 }
 
 export const authService = {
